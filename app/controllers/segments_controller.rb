@@ -1,0 +1,2 @@
+class SegmentsController < ApplicationController
+end

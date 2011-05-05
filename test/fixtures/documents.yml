@@ -1,0 +1,22 @@
+# == Schema Information
+# Schema version: 20110503060113
+#
+# Table name: documents
+#
+#  id             :integer         not null, primary key
+#  document_name  :string(255)
+#  provider_id    :integer
+#  uploaded_by_id :integer
+#  created_at     :datetime
+#  updated_at     :datetime
+#
+
+one:
+  document_name: MyString
+  provider_id: 1
+  uploaded_by_id: 1
+
+two:
+  document_name: MyString
+  provider_id: 1
+  uploaded_by_id: 1

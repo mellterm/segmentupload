@@ -1,0 +1,22 @@
+# == Schema Information
+# Schema version: 20110503060113
+#
+# Table name: providers
+#
+#  id            :integer         not null, primary key
+#  provider_name :string(255)
+#  description   :string(255)
+#  user_id       :integer
+#  created_at    :datetime
+#  updated_at    :datetime
+#
+
+one:
+  provider_name: MyString
+  description: 
+  user_id: 1
+
+two:
+  provider_name: MyString
+  description: 
+  user_id: 1

@@ -1,0 +1,23 @@
+<% title "Provider" %>
+
+<p>
+  <strong>Provider Name:</strong>
+  <%= @provider.provider_name %>
+</p>
+<p>
+  <strong>Description:</strong>
+  <%= @provider.description %>
+</p>
+<p>
+  <strong>User:</strong>
+  <%= @provider.user_id %>
+</p>
+<h1>Upload a Document for your Segments</h1>
+ <%= link_to "Create New Document (Upload)", new_provider_document_path(@provider) %>
+
+<h1>Do stuff with Providers</h1>
+<p>
+  <%= link_to "Edit", edit_provider_path(@provider) %> |
+  <%= link_to "Destroy", @provider, :confirm => 'Are you sure?', :method => :delete %> |
+  <%= link_to "View All", providers_path %>
+</p>
