@@ -2,7 +2,7 @@ require 'nokogiri'
 module DocumentParser
 
   def parse
-    document = Nokogiri.XML(File.open("/home/nagaraju/project/segmentupload/tmp/#{id}.xml"))
+    document = Nokogiri.XML(File.open(File.join(Rails.root,"tmp", "#{id}.xml")))
     document.css("tu").each do |tu|
       segment = {}      
       segment[:creationdate] = tu.attributes["creationdate"].value if tu.attributes["creationdate"]

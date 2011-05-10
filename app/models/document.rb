@@ -16,6 +16,6 @@ class Document < ActiveRecord::Base
   attr_accessible :document_name
   
   belongs_to :provider
-  has_many :segments
+  has_many :segments, :dependent => :destroy
   
 end
