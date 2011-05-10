@@ -12,10 +12,10 @@
       <td><%= document.provider_id %></td>
       <td><%= document.uploaded_by_id %></td>
       <td><%= link_to "Show", provider_document_path(@provider, document) %></td>
-      <td><%= link_to "Edit", edit_provider_document_path(document) %></td>
+      <td><%= link_to "Edit", edit_provider_document_path(@provider,document) %></td>
       <td><%= link_to "Destroy", document, :confirm => 'Are you sure?', :method => :delete %></td>
     </tr>
   <% end %>
 </table>
 
-<p><%= link_to "New Document", new_provider_document_path %></p>
+<p><%= link_to "New Document", new_provider_document_path(@provider) %></p>

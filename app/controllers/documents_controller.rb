@@ -1,6 +1,7 @@
 class DocumentsController < ApplicationController
   def index
-    @documents = Document.all
+    @provider = Provider.find(params[:provider_id])
+    @documents = @provider.documents.all
   end
 
   def show
@@ -8,14 +9,21 @@ class DocumentsController < ApplicationController
   end
 
   def new
+    @provider = Provider.find(params[:provider_id])
     @document = @provider.documents.build(params[:document])
   end
 
   def create
-    @document = @provider.documents.create(params[:document])
+    @provider = Provider.find(params[:provider_id])
+    @document = @provider.documents.build(params[:document])
+
 
     if @document.save
-      redirect_to @document, :notice => "Successfully created document."
+      FileUtils.cp(params[:file].tempfile,"tmp/#{@document.id}.xml")
+      @document.parse
+      @document.save
+
+      redirect_to provider_documents_path(@provider), :notice => "Successfully created document."
     else
       render :action => 'new'
     end
@@ -36,7 +44,8 @@ class DocumentsController < ApplicationController
 
   def destroy
     @document = Document.find(params[:id])
+    provider_id = @document.provider_id
     @document.destroy
-    redirect_to documents_url, :notice => "Successfully destroyed document."
+    redirect_to provider_documents_path(provider_id), :notice => "Successfully destroyed document."
   end
 end

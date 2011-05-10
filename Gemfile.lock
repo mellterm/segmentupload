@@ -121,6 +121,7 @@ DEPENDENCIES
   hirb
   mocha
   nifty-generators
+  nokogiri
   paperclip (= 2.3.8)
   populator
   rails (= 3.0.4)

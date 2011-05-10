@@ -12,6 +12,7 @@
 #
 
 class Document < ActiveRecord::Base
+  include DocumentParser
   attr_accessible :document_name
   
   belongs_to :provider

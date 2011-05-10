@@ -1,8 +1,12 @@
-<%= form_for(@document, :url => provider_documents_path) do |f| %>
+<%= form_for(@document, :url => provider_documents_path, :html=>{:multipart=>true}) do |f| %>
   <%= f.error_messages %>
   <p>
     <%= f.label :document_name %><br />
     <%= f.text_field :document_name %>
+  </p>
+  <p>
+    <%= label_tag :file_upload %><br />
+    <%= file_field_tag :file %>
   </p>
   <p><%= f.submit %></p>
 <% end %>
