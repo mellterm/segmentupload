@@ -25,6 +25,5 @@ group :test do
   gem 'factory_girl_rails', '1.0'
 end
 
-
 gem "bcrypt-ruby", :require => "bcrypt"
 gem "mocha", :group => :test

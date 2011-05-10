@@ -12,8 +12,8 @@ class DocumentsController < ApplicationController
   end
 
   def create
-	@document = @provider.documents.create(params[:document])
-	
+    @document = @provider.documents.create(params[:document])
+
     if @document.save
       redirect_to @document, :notice => "Successfully created document."
     else

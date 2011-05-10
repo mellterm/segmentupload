@@ -17,8 +17,6 @@ class User < ActiveRecord::Base
 
   has_many :providers, :dependent => :nullify
   
-  
-  
   attr_accessor :password
   before_save :prepare_password
 

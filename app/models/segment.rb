@@ -19,7 +19,6 @@
 
 class Segment < ActiveRecord::Base
 
-
-	belongs_to :document
+  belongs_to :document
 
 end
