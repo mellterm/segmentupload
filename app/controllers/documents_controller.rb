@@ -17,10 +17,8 @@ class DocumentsController < ApplicationController
     @provider = Provider.find(params[:provider_id])
     @document = @provider.documents.build(params[:document])
 
-
     if @document.save
-      FileUtils.cp(params[:file].tempfile,"tmp/#{@document.id}.xml")
-      @document.parse
+      @document.parse(params[:file].tempfile)
       @document.save
 
       redirect_to provider_documents_path(@provider), :notice => "Successfully created document."

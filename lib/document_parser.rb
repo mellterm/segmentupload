@@ -1,9 +1,14 @@
 require 'nokogiri'
 module DocumentParser
 
-  def parse
-    document = Nokogiri.XML(File.open(File.join(Rails.root,"tmp", "#{id}.xml")))
+  def parse(filepath)
+    document = Nokogiri.XML(File.open(filepath))
     document.css("tu").each do |tu|
+      build_segment(tu)
+    end
+  end
+
+  def build_segment(element)
       segment = {}      
       segment[:creationdate] = tu.attributes["creationdate"].value if tu.attributes["creationdate"]
       segment[:creationid] = tu.attributes["creationid"].value if tu.attributes["creationid"]
@@ -12,15 +17,11 @@ module DocumentParser
 
 
       prop =  []
-
-        tu.children.css("prop").each do |p|
+      tu.children.css("prop").each do |p|
         prop << {:type => p.attributes["type"].value, :value => p.content}
-        end
+      end
 
       segment[:prop] = prop.to_json
-
-
-
 
       tu.children.css("tuv").each do |tuv|
         lang = tuv.attributes["lang"].value if tuv.attributes["lang"]
@@ -34,9 +35,7 @@ module DocumentParser
         end
       end
       self.segments.build(segment)
-      puts segment
-    end
-
+      #puts segment
   end
 
 end
