@@ -1,5 +1,5 @@
 class Language < ActiveRecord::Base
-  has_many :segments
+  has_many :source_language_segments
 end
 
 # == Schema Information

@@ -20,6 +20,6 @@
 
 class Segment < ActiveRecord::Base
   belongs_to :document
-  belongs_to :source_language, :class => Language, :foreign_key => source_language_id
-  belongs_to :target_language, :class => Language, :foreign_key => target_language_id
+  belongs_to :source_language, :class_name => "Language"
+  belongs_to :target_language, :class_name => "Language"
 end
