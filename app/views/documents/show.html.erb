@@ -15,14 +15,14 @@
 
 <% @document.segments.each do |s| %>
   <table cellpadding="0" cellspacing="0" style="border:1px solid #CCC;width:100%">
-    <tr> <td colspan="4" style="border:1px solid #eee"><%=s.source_content %></td></tr>
-    <tr> <td colspan="4" style="border:1px solid #eee"><%=s.target_content %></td></tr>
-    <tr> <td colspan="4" style="border:1px solid #eee"><%=s.prop %></td></tr>
+    <tr> <td>Source Content</td><td colspan="3" style="border:1px solid #eee"><%=s.source_content %></td></tr>
+    <tr> <td>Target Content</td><td colspan="3" style="border:1px solid #eee"><%=s.target_content %></td></tr>
+    <tr> <td>Properties</td><td colspan="3" style="border:1px solid #eee"><%=s.prop %></td></tr>
     <tr>
-      <td  style="border:1px solid #eee" ><%=s.creationid %></td>
-      <td style="border:1px solid #eee"><%=s.creationdate %></td>
-      <td style="border:1px solid #eee"><%=s.changeid %></td>
-      <td style="border:1px solid #eee"><%=s.changedate %></td>
+      <td  style="border:1px solid #eee" >Creation ID: <%=s.creationid %></td>
+      <td style="border:1px solid #eee">Creation Date: <%=s.creationdate %></td>
+      <td style="border:1px solid #eee">Change ID: <%=s.changeid %></td>
+      <td style="border:1px solid #eee">Change Date: <%=s.changedate %></td>
     </tr>
   </table>
 <% end %>

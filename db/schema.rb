@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110510102831) do
+ActiveRecord::Schema.define(:version => 20110513102515) do
 
   create_table "documents", :force => true do |t|
     t.string   "document_name"
@@ -18,6 +18,11 @@ ActiveRecord::Schema.define(:version => 20110510102831) do
     t.integer  "uploaded_by_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "languages", :force => true do |t|
+    t.string "code"
+    t.string "long_name"
   end
 
   create_table "providers", :force => true do |t|
@@ -31,8 +36,8 @@ ActiveRecord::Schema.define(:version => 20110510102831) do
   create_table "segments", :force => true do |t|
     t.string   "source_content"
     t.string   "target_content"
-    t.string   "source_language_id"
-    t.string   "target_language_id"
+    t.integer  "source_language_id", :limit => 255
+    t.integer  "target_language_id", :limit => 255
     t.integer  "document_id"
     t.datetime "creationdate"
     t.string   "creationid"
