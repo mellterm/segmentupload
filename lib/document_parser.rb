@@ -1,6 +1,8 @@
 require 'nokogiri'
 module DocumentParser
 
+  FORMAT_TAGS= ["ut","bpt","ph","ept"]
+
   def parse(filepath)
     document = Nokogiri.XML(File.open(filepath))
     document.css("tu").each do |tu|
@@ -15,7 +17,6 @@ module DocumentParser
     segment[:changeid] = tu.attributes["changeid"].value if tu.attributes["changeid"] 
     segment[:changedate] = tu.attributes["changedate"].value if tu.attributes["changedate"] 
 
-
     prop =  []
     tu.children.css("prop").each do |p|
       prop << {:type => p.attributes["type"].value, :value => p.content}
@@ -23,33 +24,31 @@ module DocumentParser
 
     segment[:prop] = prop.to_json
 
-    tuv = tu.children.css("tuv").first
-    lang= Language.find_by_code(tuv.attributes["lang"].value)
-    content = get_content(tuv.at("seg"))
-    segment[:source_language_id] = lang.id
-    segment[:source_content] = content
+    source_tuv = tu.children.css("tuv").first
+    #NOTE this can be cached
+    source_lang= Language.find_by_code(source_tuv.attributes["lang"].value)
+    source_content = get_content(source_tuv.at("seg"))
+    segment[:source_language_id] = source_lang.id
+    segment[:source_content] = source_content
 
-    tuv = tu.children.css("tuv")[1]
-    lang= Language.find_by_code(tuv.attributes["lang"].value)
-    content = get_content tuv.at("seg")
-    segment[:target_language_id] = lang.id
-    segment[:target_content] = content
+    target_tuv = tu.children.css("tuv")[1]
+    #NOTE this can be cached
+    target_lang= Language.find_by_code(target_tuv.attributes["lang"].value)
+    target_content = get_content(target_tuv.at("seg"))
+    segment[:target_language_id] = target_lang.id
+    segment[:target_content] = target_content
 
     self.segments.build(segment)
   end
 
 
   def get_content(seg)
-   text_tags = skip_tags(seg.children)
-   str = ""
-   text_tags.each{|t| str = str + t.text}
-   str
+    skip_tags(seg.children).map{|t| t.text}.join#(' ')
   end
 
   def skip_tags(tag)
-    discard_tags= ["ut","bpt","ph","ept"]
     tag.reject do |x|
-      discard_tags.include?(x.name) || (x.text? && x.text.match(/<\/?cf.*>/))
+      FORMAT_TAGS.include?(x.name) || (x.text? && x.text.match(/<\/?cf.*>/))
     end
   end
 
