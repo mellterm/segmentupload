@@ -1,5 +1,6 @@
 require 'nokogiri'
 module DocumentParser
+  extend ActiveSupport::Memoizable
 
   FORMAT_TAGS= ["ut","bpt","ph","ept"]
 

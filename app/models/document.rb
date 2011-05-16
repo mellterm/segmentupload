@@ -17,5 +17,5 @@ class Document < ActiveRecord::Base
   
   belongs_to :provider
   has_many :segments, :dependent => :destroy
-  
+
 end
