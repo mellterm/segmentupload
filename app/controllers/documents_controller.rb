@@ -16,6 +16,7 @@ class DocumentsController < ApplicationController
   def create
     @provider = Provider.find(params[:provider_id])
     @document = @provider.documents.build(params[:document])
+    @document.uploaded_by_id =   current_user.id if current_user
 
     if @document.save
       @document.parse(params[:file].tempfile)

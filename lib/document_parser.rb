@@ -25,15 +25,13 @@ module DocumentParser
     segment[:prop] = prop.to_json
 
     source_tuv = tu.children.css("tuv").first
-    #NOTE this can be cached
-    source_lang= Language.find_by_code(source_tuv.attributes["lang"].value)
+    source_lang= find_lang(source_tuv.attributes["lang"].value)
     source_content = get_content(source_tuv.at("seg"))
     segment[:source_language_id] = source_lang.id
     segment[:source_content] = source_content
 
     target_tuv = tu.children.css("tuv")[1]
-    #NOTE this can be cached
-    target_lang= Language.find_by_code(target_tuv.attributes["lang"].value)
+    target_lang= find_lang(target_tuv.attributes["lang"].value)
     target_content = get_content(target_tuv.at("seg"))
     segment[:target_language_id] = target_lang.id
     segment[:target_content] = target_content
@@ -51,6 +49,12 @@ module DocumentParser
       FORMAT_TAGS.include?(x.name) || (x.text? && x.text.match(/<\/?cf.*>/))
     end
   end
+
+  def find_lang(code)
+    Language.find_or_create_by_code(code)
+  end
+
+  memoize :find_lang
 
 end
 
