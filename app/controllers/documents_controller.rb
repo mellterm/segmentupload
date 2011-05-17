@@ -19,7 +19,7 @@ class DocumentsController < ApplicationController
     @document.uploaded_by_id =   current_user.id if current_user
 
     if @document.save
-      @document.parse(params[:file].tempfile)
+      @document.parse(params[:file].tempfile.path)
       @document.save
 
       redirect_to provider_documents_path(@provider), :notice => "Successfully created document."
