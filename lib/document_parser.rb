@@ -5,7 +5,7 @@ module DocumentParser
   FORMAT_TAGS= ["ut","bpt","ph","ept"]
 
   def parse(filepath)
-    document = Nokogiri.XML(File.read(filepath))
+    document = Nokogiri.XML(File.open(filepath))
     document.css("tu").each do |tu|
       build_segment(tu)
     end
