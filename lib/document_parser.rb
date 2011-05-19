@@ -1,14 +1,34 @@
 require 'nokogiri'
+require 'zip/zip'
 module DocumentParser
   extend ActiveSupport::Memoizable
 
   FORMAT_TAGS= ["ut","bpt","ph","ept"]
 
+  def import_from_file(path)
+    path = File.extname(path) == ".zip" ? extract(path) : path
+    parse(path)
+  end
+
   def parse(filepath)
     document = Nokogiri.XML(File.open(filepath))
     document.css("tu").each do |tu|
-      build_segment(tu)
+      build_segment(tu).save
     end
+  end
+
+  protected
+  def extract(path)
+    archive_path = ""
+    Zip::ZipInputStream::open(path) do |io|
+      file = io.get_next_entry
+      file = io.get_next_entry if file.name_is_directory?
+      archive_path = Rails.root.join("archives", "#{Time.now.strftime( "%Y%m%d%H%M%S" )}-#{file.name}")
+      File.open(archive_path, "wb") do |f|
+        f.write io.read
+      end
+    end
+    archive_path
   end
 
   def build_segment(tu)

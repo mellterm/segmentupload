@@ -9,6 +9,8 @@ gem 'acts_as_tree'
 gem 'haml'
 gem 'formtastic', '1.2.3'
 gem 'nokogiri'
+gem 'stalker'
+gem 'rubyzip'
 
 
 group :development do
@@ -18,6 +20,7 @@ group :development do
   gem 'populator' 
   gem 'hirb'
   gem 'nifty-generators'  
+  gem 'thin'
 end
 
 

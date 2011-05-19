@@ -18,14 +18,15 @@ class DocumentsController < ApplicationController
     @document = @provider.documents.build(params[:document])
     @document.uploaded_by_id =   current_user.id if current_user
 
-    if @document.save
-      @document.parse(params[:file].tempfile.path)
-      @document.save
+    render :action => 'new', :alert => "Please correct the errors below." and return unless @document.save
 
-      redirect_to provider_documents_path(@provider), :notice => "Successfully created document."
-    else
-      render :action => 'new'
-    end
+    archive_path = Rails.root.join("archives", "#{Time.now.strftime( "%Y%m%d%H%M%S" )}-#{params[:file].original_filename}")
+    FileUtils.cp(params[:file].tempfile.path, archive_path)
+
+    Rails.logger.info ">>>>>>>>>>>>>>>>>>>> #{archive_path}"
+    Stalker.enqueue("document.upload", :id => @document.id, :path => archive_path)
+    redirect_to provider_documents_path(@provider), :notice => "Successfully created document."
+
   end
 
   def edit
