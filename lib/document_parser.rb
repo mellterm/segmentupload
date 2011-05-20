@@ -11,34 +11,10 @@ module DocumentParser
   end
 
   def parse(filepath)
-    document = Nokogiri.XML(File.open(filepath))
-    document.css("tu").each do |tu|
-      build_segment(tu).save
-    end
-  end
-
-  def stream_parse(filepath)
-    reader = Nokogiri::XML::Reader(File.open(filepath))
-
+    reader = Nokogiri::XML::Reader(File.open("/home/minhajuddin/tmx1.xml"))
     reader.each do |node|
       next if node.name != "tu"
-
-      tu = Nokogiri.XML("<tu>#{node.inner_xml}</tu>")
-
-      prop_json = tu.children.css("prop").map { |x| {:type => x.attributes["type"].value, :value => x.content}}.to_json
-
-      puts node.inner_xml
-
-      segment_attrs = {
-        :creationdate => node.attributes["creationdate"],
-        :creationid => node.attributes["creationid"],
-        :changeid => node.attributes["changeid"],
-        :changedate => node.attributes["changedate"],
-        :prop => prop_json,
-      }
-
-      puts segment_attrs
-
+      save_segment(node)
     end
   end
 
@@ -56,44 +32,31 @@ module DocumentParser
     archive_path
   end
 
-  def build_segment(tu)
-    segment = {}      
-    segment[:creationdate] = tu.attributes["creationdate"].value if tu.attributes["creationdate"]
-    segment[:creationid] = tu.attributes["creationid"].value if tu.attributes["creationid"]
-    segment[:changeid] = tu.attributes["changeid"].value if tu.attributes["changeid"] 
-    segment[:changedate] = tu.attributes["changedate"].value if tu.attributes["changedate"] 
+  def save_segment
+    tu = Nokogiri.XML("<tu>#{node.inner_xml}</tu>")
 
-    prop =  []
-    tu.children.css("prop").each do |p|
-      prop << {:type => p.attributes["type"].value, :value => p.content}
+    prop_json = tu.children.css("prop").map { |x| {:type => x.attributes["type"].value, :value => x.content}}.to_json
+
+    source_tuv, target_tuv = tu.children.css("tuv").map do |tuv|
+      {
+        :lang => find_lang(tuv.attributes["lang"].value).id,
+        :content => tuv.at("seg").children.reject {|x| FORMAT_TAGS.include?(x.name) || (x.text? && x.text.match(/<\/?cf.*>/))}.map{|t| t.text}.join
+      }
     end
 
-    segment[:prop] = prop.to_json
+    segment_attrs = {
+      :creationdate => node.attributes["creationdate"],
+      :creationid => node.attributes["creationid"],
+      :changeid => node.attributes["changeid"],
+      :changedate => node.attributes["changedate"],
+      :prop => prop_json,
+      :source_language_id => source_tuv[:lang],
+      :source_content => source_tuv[:content],
+      :target_language_id => target_tuv[:lang],
+      :target_content => target_tuv[:content]
+    }
 
-    source_tuv = tu.children.css("tuv").first
-    source_lang= find_lang(source_tuv.attributes["lang"].value)
-    source_content = get_content(source_tuv.at("seg"))
-    segment[:source_language_id] = source_lang.id
-    segment[:source_content] = source_content
-
-    target_tuv = tu.children.css("tuv")[1]
-    target_lang= find_lang(target_tuv.attributes["lang"].value)
-    target_content = get_content(target_tuv.at("seg"))
-    segment[:target_language_id] = target_lang.id
-    segment[:target_content] = target_content
-
-    self.segments.build(segment)
-  end
-
-
-  def get_content(seg)
-    skip_tags(seg.children).map{|t| t.text}.join#(' ')
-  end
-
-  def skip_tags(tag)
-    tag.reject do |x|
-      FORMAT_TAGS.include?(x.name) || (x.text? && x.text.match(/<\/?cf.*>/))
-    end
+    self.segments.build(segment_attrs).save
   end
 
   def find_lang(code)
@@ -103,5 +66,3 @@ module DocumentParser
   memoize :find_lang
 
 end
-
-
