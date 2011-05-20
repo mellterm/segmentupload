@@ -17,6 +17,31 @@ module DocumentParser
     end
   end
 
+  def stream_parse(filepath)
+    reader = Nokogiri::XML::Reader(File.open(filepath))
+
+    reader.each do |node|
+      next if node.name != "tu"
+
+      tu = Nokogiri.XML("<tu>#{node.inner_xml}</tu>")
+
+      prop_json = tu.children.css("prop").map { |x| {:type => x.attributes["type"].value, :value => x.content}}.to_json
+
+      puts node.inner_xml
+
+      segment_attrs = {
+        :creationdate => node.attributes["creationdate"],
+        :creationid => node.attributes["creationid"],
+        :changeid => node.attributes["changeid"],
+        :changedate => node.attributes["changedate"],
+        :prop => prop_json,
+      }
+
+      puts segment_attrs
+
+    end
+  end
+
   protected
   def extract(path)
     archive_path = ""
