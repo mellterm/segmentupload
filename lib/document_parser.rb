@@ -13,7 +13,7 @@ module DocumentParser
   def parse(filepath)
     reader = Nokogiri::XML::Reader(File.open("/home/minhajuddin/tmx1.xml"))
     reader.each do |node|
-      next if node.name != "tu"
+      next if node.name != "tu" || node.empty_element? || node.inner_xml.empty?
       save_segment(node)
     end
   end
@@ -32,7 +32,7 @@ module DocumentParser
     archive_path
   end
 
-  def save_segment
+  def save_segment(node)
     tu = Nokogiri.XML("<tu>#{node.inner_xml}</tu>")
 
     prop_json = tu.children.css("prop").map { |x| {:type => x.attributes["type"].value, :value => x.content}}.to_json
