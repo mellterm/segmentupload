@@ -11,7 +11,7 @@ module DocumentParser
   end
 
   def parse(filepath)
-    reader = Nokogiri::XML::Reader(File.open("/home/minhajuddin/tmx1.xml"))
+    reader = Nokogiri::XML::Reader(File.open(filepath))
     reader.each do |node|
       next if node.name != "tu" || node.empty_element? || node.inner_xml.empty?
       save_segment(node)
