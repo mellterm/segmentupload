@@ -20,16 +20,9 @@ module DocumentParser
 
   protected
   def extract(path)
-    archive_path = ""
-    Zip::ZipInputStream::open(path) do |io|
-      file = io.get_next_entry
-      file = io.get_next_entry if file.name_is_directory?
-      archive_path = Rails.root.join("archives", "#{Time.now.strftime( "%Y%m%d%H%M%S" )}-#{file.name}")
-      File.open(archive_path, "wb") do |f|
-        f.write io.read
-      end
-    end
-    archive_path
+    archive_path = Rails.root.join("archives", "#{Time.now.strftime( "%Y%m%d%H%M%S" )}-#{File.basename(path)}")
+    `unzip -d #{archive_path} #{path}` #unzip
+    archive_file_path = `find #{archive_path} -type f`.strip
   end
 
   def save_segment(node)
