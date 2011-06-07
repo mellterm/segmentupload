@@ -11,6 +11,7 @@ gem 'formtastic', '1.2.3'
 gem 'nokogiri'
 gem 'stalker'
 gem 'rubyzip'
+gem 'capistrano'
 
 
 group :development do
