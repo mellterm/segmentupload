@@ -38,7 +38,7 @@ namespace :thin do
   %w(start stop restart).each do |action| 
   desc "#{action} the app's Thin Cluster"  
     task action.to_sym, :roles => :app do  
-      run "cd #{current_path} && rvmsudo bundle exec thin #{action} -p 80 -e production -c #{deploy_to}/current" 
+      run "cd #{current_path} && rvmsudo bundle exec thin #{action} -p 80 -d -e production -c #{deploy_to}/current" 
     end
   end
 end
