@@ -12,6 +12,7 @@ gem 'nokogiri'
 gem 'stalker'
 gem 'rubyzip'
 gem 'capistrano'
+gem 'thin'
 
 
 group :development do
@@ -21,7 +22,6 @@ group :development do
   gem 'populator' 
   gem 'hirb'
   gem 'nifty-generators'  
-  gem 'thin'
 end
 
 
